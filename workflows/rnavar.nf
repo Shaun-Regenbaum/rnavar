@@ -71,7 +71,6 @@ include { GATK4_INDEXFEATUREFILE        } from '../modules/nf-core/modules/gatk4
 include { GATK4_VARIANTFILTRATION       } from '../modules/nf-core/modules/gatk4/variantfiltration/main'
 include { SAMTOOLS_INDEX                } from '../modules/nf-core/modules/samtools/index/main'
 include { TABIX_TABIX as TABIX          } from '../modules/nf-core/modules/tabix/tabix/main'
-include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 
 /*
 ========================================================================================
@@ -80,7 +79,7 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/modules/custo
 */
 
 include { ALIGN_STAR                    } from '../subworkflows/nf-core/align_star'         // Align reads to genome and sort and index the alignment file
-include { STAR_GENOMEGENERATE } from '../subworkflows/nf-core/genomegenerate' // Generate genome index for STAR
+include { STAR_GENOMEGENERATE           } from '../modules/nf-core/modules/star/genomegenerate/main'            //addParams(options: params.star_index_options)
 include { MARKDUPLICATES                } from '../subworkflows/nf-core/markduplicates'     // Mark duplicates in the BAM file
 include { SPLITNCIGAR                   } from '../subworkflows/nf-core/splitncigar'        // Splits reads that contain Ns in their cigar string
 include { RECALIBRATE                   } from '../subworkflows/nf-core/recalibrate'        // Estimate and correct systematic bias
@@ -446,8 +445,6 @@ workflow RNAVAR {
     }
 
     ch_version_yaml = Channel.empty()
-    CUSTOM_DUMPSOFTWAREVERSIONS (ch_versions.unique().collectFile(name: 'collated_versions.yml'))
-    ch_version_yaml = CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect()
 
     //
     // MODULE: MultiQC
